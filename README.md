@@ -1,8 +1,8 @@
-# 🛡️ Mini-SOC : Wazuh SIEM & Endpoint Monitoring Lab
+# Mini-SOC : Wazuh SIEM & Endpoint Monitoring Lab
 
 Ce projet documente la mise en place d'un **SOC (Security Operations Center)** miniature en environnement de laboratoire. L'objectif est d'assurer la collecte centralisée de logs, la surveillance en temps réel d'endpoints (**Linux** & **Windows**) et la détection d'événements de sécurité suspects (ex: attaques par force brute) à l'aide de la suite **Wazuh (SIEM & XDR)**.
 
-## 📐 Architecture de la Solution
+## Architecture de la Solution
 
 ```
 ┌────────────────────────────────────────────────────────────────────────┐
@@ -41,7 +41,7 @@ Ce projet documente la mise en place d'un **SOC (Security Operations Center)** m
 
 ---
 
-## 🚀 Étape 1 : Déploiement de la Stack Wazuh Manager (Docker)
+## Étape 1 : Déploiement de la Stack Wazuh Manager (Docker)
 
 Le serveur Wazuh a été déployé en mode *single-node* à l'aide des conteneurs Docker officiels :
 
@@ -58,7 +58,7 @@ sudo docker compose ps
 
 ---
 
-## 🔑 Étape 2 : Enregistrement et Authentification des Agents
+## Étape 2 : Enregistrement et Authentification des Agents
 
 L'enregistrement des agents s'est appuyé sur l'utilitaire `manage_agents` du Manager pour générer les clés de chiffrement symétrique et assurer la liaison sécurisée via le port `1514/TCP`.
 
@@ -74,25 +74,20 @@ L'enregistrement des agents s'est appuyé sur l'utilitaire `manage_agents` du Ma
   ```
 * Importation de la clé sur Windows via PowerShell Administrateur :
   ```powershell
-  & 'C:\Program Files (x86)\ossec-agent\manage_agents.exe' -i "MDAyIFdpbmRvd3MxMCBhbnkgN2M0NzI5ZDE5YmE3MjIxYzc0NDQyMzU4MDI4NjdmN2I5MDIzNDgyM2FlYzIyODIxNzY0ZTFlOTBkOTc4Yzk5Yw=="
+  & 'C:\Program Files (x86)\ossec-agent\manage_agents.exe' -i "Clés ici"
   ```
 * Configuration de l'adresse IP du serveur Manager (`172.20.10.7`) dans `C:\Program Files (x86)\ossec-agent\ossec.conf`.
 * Redémarrage du service : `Restart-Service Wazuh`.
 
 ---
 
-## 📊 Étape 3 : Validation de la Connectivité des Agents
+## Étape 3 : Validation de la Connectivité des Agents
 
-Une fois la poignée de main cryptographique établie, le Dashboard Wazuh confirme l'état opérationnel et la bonne réception des signaux *keepalive*.
-
-### 📸 Vue d'ensemble des Agents Connectés
-
-![Wazuh Agents Active](data:image/png;base64,iVBORw0KGgoAAAANSU6AAA)
-*Figure 1 : Tableau de bord Wazuh affichant 100% d'agents actifs (`kali` ID 001 et `Windows10` ID 002).*
+Une fois la poignée de main cryptographique établie, le Dashboard Wazuh confirme l'état opérationnel et la bonne réception des signaux.
 
 ---
 
-## ⚡ Étape 4 : Simulation d'Attaque & Détection en Temps Réel
+## Étape 4 : Simulation d'Attaque & Détection en Temps Réel
 
 Afin de valider la capacité du SIEM à corréler et lever des alertes sur des événements de sécurité, nous avons simulé une attaque par force brute / échec d'authentification sur la machine Windows 10.
 
@@ -100,15 +95,9 @@ Afin de valider la capacité du SIEM à corréler et lever des alertes sur des �
 ```powershell
 1..5 | ForEach-Object { net use \\localhost /user:fakeuser fakepassword }
 ```
-
-### 📸 Remontée des Alertes dans le Dashboard (Security Events)
-
-![Wazuh Security Events](data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD)
-*Figure 2 : Ingestion immédiate des événements. On observe la levée de 5 alertes de niveau 5 pour la règle `60122` (Logon failure - Unknown user or bad password) ainsi qu'une alerte de changement de port réseau sur Kali (Règle `533`).*
-
 ---
 
-## 🛠️ Résolution des Problèmes Encountered (Troubleshooting)
+## Résolution des Problèmes rencontrés (Troubleshooting)
 
 1. **Changement d'adresse IP dynamique (DHCP/Hotspot)** :
    * *Problème* : L'agent Windows n'arrivait plus à joindre le serveur (`ERROR: Unable to connect / Connection refused`) suite au passage de Kali de `172.20.10.3` à `172.20.10.7`.
@@ -120,7 +109,7 @@ Afin de valider la capacité du SIEM à corréler et lever des alertes sur des �
 
 ---
 
-## 🎯 Compétences Démontrées
+## Compétences Démontrées
 
 * **SIEM & XDR** : Administration et supervision Wazuh.
 * **Containers** : Déploiement et gestion de microservices avec Docker Compose.
